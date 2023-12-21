@@ -14,7 +14,7 @@ This project does not encourage or endorse unauthorized data scraping, and users
 
 To use this project, you need the following:
 
-- Python 3.7 or higher installed on your machine.
+- Python 3.7 or higher installed on your machine.[![Python Badge](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 - An existing Telegram account.
 
 ## Setup Process
@@ -69,5 +69,3 @@ pip install requests beautifulsoup4 python-telegram-bot
 
 python id.py   # Fetches the Channel ID
 python bit.py  # Scrapes and Sends Announcements to Channel
-
-"# Telegram-Channel-Announcement-Scraper-for-BIT-UCSC-Website" 
