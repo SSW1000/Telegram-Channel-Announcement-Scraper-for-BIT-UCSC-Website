@@ -81,19 +81,19 @@ Modify the Python script to include an absolute file path for `previous_announce
 ```python
 # Function to fetch previously sent announcements from a file
 def fetch_previous_announcements():
-    file_path = '/absolute/path/to/previous_announcements.txt'  # Specify absolute file path here
+    file_path = '/absolute/path/to/previous_announcements.txt' #add the absolute path to the file
     previous_announcements = set()
 
     if os.path.exists(file_path):
-        with open(file_path, 'r') as file:
+        with open(file_path, 'r', encoding='utf-8') as file:
             previous_announcements = set(file.read().splitlines())
 
     return previous_announcements
 
 # Function to save the current announcements to a file
 def save_current_announcements(announcements):
-    file_path = '/absolute/path/to/previous_announcements.txt'  # Specify absolute file path here
-
-    with open(file_path, 'w') as file:
+    file_path = '/absolute/path/to/previous_announcements.txt' #add the absolute path to the file
+    
+    with open(file_path, 'w', encoding='utf-8') as file:
         file.write('\n'.join(announcements))
 ```
