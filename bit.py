@@ -3,7 +3,6 @@ import requests
 from bs4 import BeautifulSoup
 from telegram import Bot
 import os.path
-from datetime import datetime, timedelta
 
 # Function to fetch previously sent announcements from a file
 def fetch_previous_announcements():
@@ -11,7 +10,7 @@ def fetch_previous_announcements():
     previous_announcements = set()
 
     if os.path.exists(file_path):
-        with open(file_path, 'r') as file:
+        with open(file_path, 'r', encoding='utf-8') as file:
             previous_announcements = set(file.read().splitlines())
 
     return previous_announcements
@@ -20,7 +19,7 @@ def fetch_previous_announcements():
 def save_current_announcements(announcements):
     file_path = 'previous_announcements.txt'
     
-    with open(file_path, 'w') as file:
+    with open(file_path, 'w', encoding='utf-8') as file:
         file.write('\n'.join(announcements))
 
 async def send_messages():
@@ -56,18 +55,23 @@ async def send_messages():
                 strong_tag = tag.find_next('strong')   # Find the next <strong> tag after <h4>
                 announcement_date = strong_tag.text.strip() if strong_tag else 'N/A'  # Extract the text within <strong> tags
                 
-                # Construct the message
-                message = f"Title: {announcement_title}\nDate: {announcement_date}\n"
+                # Replace emojis with their Unicode representations
+                unicode_emoji_title = "\U0001F4E2" + " " + announcement_title
+                unicode_emoji_date = "\U0001F4C5" + " " + announcement_date
+                
+                # Combine emojis and text
+                message = f"{unicode_emoji_title}\n{unicode_emoji_date}\n"
                 
                 # Check if the announcement is new
                 if message not in previous_announcements:
                     new_announcements.append(message)
                     previous_announcements.add(message)
 
-            # Send the new announcements to the Telegram channel
-            if new_announcements:
-                await bot.send_message(chat_id=channel_id, text='\n\n'.join(new_announcements))
-            
+            # Send each new announcement separately to the Telegram channel (starting with the most recent)
+            for announcement in reversed(new_announcements):
+                await bot.send_message(chat_id=channel_id, text=announcement)
+                await asyncio.sleep(1)  # Introduce a small delay between messages
+
             # Save the updated announcements to the file
             save_current_announcements(previous_announcements)
 
