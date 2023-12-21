@@ -51,22 +51,23 @@ async def send_messages():
             new_announcements = []
 
             for tag in announcement_tags:
-                announcement_title = tag.text.strip()  # Extract the text within <h4> tags
-                announcement_link = tag.find('a')['href']  # Extract the link within <a> tags
-                strong_tag = tag.find_next('strong')   # Find the next <strong> tag after <h4>
-                announcement_date = strong_tag.text.strip() if strong_tag else 'N/A'  # Extract the text within <strong> tags
+                announcement_title = tag.text.strip()
+                strong_tag = tag.find_next('strong')
+                announcement_date = strong_tag.text.strip() if strong_tag else 'N/A'
                 
-                # Construct the message with emojis using Unicode and include the link
+                # Construct the message with emojis using Unicode
                 emoji_title = "\U0001F4E2 " + announcement_title
                 emoji_date = "\U0001F4C5 " + announcement_date
-                # Emoji symbol for link (Unicode: 🔗)
-                emoji_link = "\U0001F517"
-                message = f"{emoji_title}\n{emoji_date}\n{emoji_link} {announcement_link}\n"
-                
-                # Check if the announcement is new
-                if message not in previous_announcements:
+                message = f"{emoji_title}\n{emoji_date}"
+
+                # Check if the announcement (title + date) is new
+                announcement_identifier = f"{announcement_title} - {announcement_date}"
+                if announcement_identifier not in previous_announcements:
+                    announcement_link = tag.find('a')['href']
+                    emoji_link = "\U0001F517"  # Emoji symbol for link
+                    message += f"\n{emoji_link} {announcement_link}\n"
+                    previous_announcements.add(announcement_identifier)
                     new_announcements.append(message)
-                    previous_announcements.add(message)
 
             # Send each new announcement separately to the Telegram channel (starting with the most recent)
             for announcement in reversed(new_announcements):
