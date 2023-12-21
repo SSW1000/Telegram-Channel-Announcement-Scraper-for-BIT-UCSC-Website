@@ -69,3 +69,31 @@ pip install requests beautifulsoup4 python-telegram-bot
 
 python id.py   # Fetches the Channel ID
 python bit.py  # Scrapes and Sends Announcements to Channel
+```
+## Handling Flooded Channels
+
+If the channel gets flooded due to `previous_announcements.txt` not created by the script, follow these steps:
+
+### Specify Absolute File Path
+
+Modify the Python script to include an absolute file path for `previous_announcements.txt` to ensure the file is created in a specific location where you have control over its contents.
+
+```python
+# Function to fetch previously sent announcements from a file
+def fetch_previous_announcements():
+    file_path = '/absolute/path/to/previous_announcements.txt'  # Specify absolute file path here
+    previous_announcements = set()
+
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as file:
+            previous_announcements = set(file.read().splitlines())
+
+    return previous_announcements
+
+# Function to save the current announcements to a file
+def save_current_announcements(announcements):
+    file_path = '/absolute/path/to/previous_announcements.txt'  # Specify absolute file path here
+
+    with open(file_path, 'w') as file:
+        file.write('\n'.join(announcements))
+```
