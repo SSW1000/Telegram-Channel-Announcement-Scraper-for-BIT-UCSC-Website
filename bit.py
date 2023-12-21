@@ -52,15 +52,16 @@ async def send_messages():
 
             for tag in announcement_tags:
                 announcement_title = tag.text.strip()  # Extract the text within <h4> tags
+                announcement_link = tag.find('a')['href']  # Extract the link within <a> tags
                 strong_tag = tag.find_next('strong')   # Find the next <strong> tag after <h4>
                 announcement_date = strong_tag.text.strip() if strong_tag else 'N/A'  # Extract the text within <strong> tags
                 
-                # Replace emojis with their Unicode representations
-                unicode_emoji_title = "\U0001F4E2" + " " + announcement_title
-                unicode_emoji_date = "\U0001F4C5" + " " + announcement_date
-                
-                # Combine emojis and text
-                message = f"{unicode_emoji_title}\n{unicode_emoji_date}\n"
+                # Construct the message with emojis using Unicode and include the link
+                emoji_title = "\U0001F4E2 " + announcement_title
+                emoji_date = "\U0001F4C5 " + announcement_date
+                # Emoji symbol for link (Unicode: 🔗)
+                emoji_link = "\U0001F517"
+                message = f"{emoji_title}\n{emoji_date}\n{emoji_link} {announcement_link}\n"
                 
                 # Check if the announcement is new
                 if message not in previous_announcements:
